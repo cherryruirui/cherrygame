@@ -1,0 +1,1094 @@
+服务名称改为：BioSecurity SDK Service
+百傲瑞达接收（发送）的数据格式：
+Mode:模块
+MsgId:消息编号
+OpType:类型
+Ret:结果
+Data:数据
+
+MsgId为-4时，表示为模块不支持
+{
+    "Mode": "",
+    "MsgId": "-4",
+    "OpType": "",
+    "Ret": "-1013",
+    "Data": ""
+}
+
+MsgId为-5时，表示为停车场命令不支持
+{
+    "Mode": "Park",
+    "MsgId": "-5",
+    "OpType": "",
+    "Ret": "-1013",
+    "Data": ""
+}
+
+MsgId为-6时，表示为无效json数据格式
+{
+    "Mode": "",
+    "MsgId": "-6",
+    "OpType": "",
+    "Ret": "-1007",
+    "Data": ""
+}
+
+MsgId为-7时，表示为无效参数
+{
+    "Mode": "",
+    "MsgId": "-7",
+    "OpType": "",
+    "Ret": "-1006",
+    "Data": ""
+}
+
+MsgId为-8时，表示为厂商类型不匹配
+{
+    "Mode": "",
+    "MsgId": "-8",
+    "OpType": "",
+    "Ret": "0",
+    "Data": ""
+}
+
+MsgId为-9时，表示为臻识回调函数中失败
+{
+    "Mode": "",
+    "MsgId": "-9",
+    "OpType": "",
+    "Ret": "**",		//见错误码			
+    "Data": ""
+}
+
+MsgId为-10时，表示为中控回调函数中失败
+{
+    "Mode": "",
+    "MsgId": "-9",
+    "OpType": "",
+    "Ret": "**",		//见错误码			
+    "Data": ""
+}
+
+
+1，读取系统信息
+{"Mode": "Park","MsgId": "1","OpType": "ZKWebSvrInfo","Data": ""}
+返回
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "ZKWebSvrInfo",
+    "Ret": "0",							//返回值
+    "error": "",						//错误描述
+    "Data": {	
+        "Server_version": "2.0.2",		//版本
+        "Start": "2017-07-14 15:27:20",	//服务开始时间
+        "Now": "2017-07-14 15:28:36"	//现在时间
+    }
+}
+
+
+2,设置自定义参数
+{"Mode": "Park","MsgId": "1","OpType": "SetParamInfo","Data": {"DevCount":"16",
+	"PicFilePath":"E:\\Java\\LPRClientDemo",
+	"BenableImage":"1",
+	"CountryCode":""}}
+	
+只设置特定的参数时，其余参数要赋值为-1
+	
+OpType 			SetParamInfo
+DevCount  		设备数量
+PicFilePath		自动识别时的图片保存的固定路径(双斜杠)
+BenableImage	指定识别结果的回调是否需要包含截图信息：1为需要，0为不需要
+CountryCode		国家代码，3 泰国
+						  255 中国(默认)
+
+返回
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "SetParamInfo",
+    "Ret": "0",
+    "Data": ""
+}
+3,获取定义参数
+{"Mode": "Park","MsgId": "1","OpType": "GetParamInfo","Data": ""}
+OpType 			GetParamInfo
+返回
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "GetParamInfo",
+    "Ret": "0",
+    "Data": {
+        "DevCount": "16",
+        "PicFilePath": "E:\\Java\\LPRClientDemo",
+        "BenableImage": "1"
+    }
+}
+
+4,开始搜索设备(需要关闭防火墙)
+{"Mode": "Park","MsgId": "1","OpType": "StartFindDevice","Data": ""}
+OpType 			StartFindDevice
+返回
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "StartFindDevice",
+    "Ret": "0",
+    "Data": ""
+}
+{
+    "Mode": "Park",
+    "MsgId": "1500029111",				//随机数//随机数
+    "OpType": "OnDeviceFound",
+    "Ret": "0",
+    "Data": {
+        "DeviceType": "zs-LPR",
+        "DeviceName": "IVS",
+        "IP": "192.168.215.191",
+        "MacAddr": "",
+        "PortWeb": "0",
+        "PortListen": "80",
+        "SubMask": "",
+        "Gateway": "",
+        "MultiAddr": "",
+        "DnsAddr": "",
+        "MultiPort": "0",
+        "ChannelNum": "0",
+        "FindCount": "0",
+        "DeviceID": "0"
+    }
+}
+
+5，停止搜索设备
+{"Mode": "Park","MsgId": "1","OpType": "StopFindDevice","Data": ""}
+OpType 			StopFindDevice
+返回
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "StopFindDevice",
+    "Ret": "-1",
+    "Data": ""
+}
+{"Mode": "Park","MsgId": "1","OpType": "SetParamInfo","Data": {"DevCount":"16",
+	"PicFilePath":"E:\\Java\\LPRClientDemo",
+	"BenableImage":"1",
+	"CountryCode":""}}
+6，打开设备
+{"Mode": "Park","MsgId": "1","OpType": "OpenDevice","Data": {"DeviceType":"zk-LPR1000",
+	"IpAddr":"192.168.215.123",
+	"Port":"5000",
+	"UserName":"admin",
+	"Password":"admin"}}
+
+OpType 				OpenDevice
+DeviceType			产商类型
+IpAddr				设备IP
+Port				端口
+UserName			用户名
+Password			密码
+返回
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "OpenDevice",
+    "Ret": "8465568",		//设备句柄
+    "Data": {
+        "Serialhandle": "112247696",//通道句柄
+        "CountryCode": "66"	//国家编码,见附录
+    }
+}
+7，关闭设备
+{"Mode": "Park","MsgId": "1","OpType": "CloseDevice","Data": {"Handle":"112247696"}}
+OpType 			CloseDevice
+Handle			设备句柄
+返回
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "CloseDevice",
+    "Ret": "0",
+    "Data": ""
+}
+
+8，同步设备时间
+{"Mode": "Park","MsgId": "1","OpType": "SetDateTime","Data": {"Handle":"112247696",
+	"DTInfo":"2016-07-13-10-25-53"}}
+OpType 			SetDateTime 
+Handle			设备句柄 
+DTInfo			时间格式,例如2016-07-13 10:43:53或者2016-07-13-10-25-53
+返回
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "SetDateTime",
+    "Ret": "0",
+    "Data": ""
+}
+
+9,设备是否连接
+{"Mode": "Park","MsgId": "1","OpType": "IsDeviceConnected","Data": {"Handle":"112247696"}}
+OpType 			IsDeviceConnected
+Handle			设备句柄
+返回
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "IsDeviceConnected",
+    "Ret": "0",
+    "Data": {
+        "CountryCode": "66"//国家编码
+    }
+}
+
+10，保存抓图数据到Jpeg文件
+{"Mode": "Park","MsgId": "1","OpType": "SaveSnapImageToJpeg","Data": {"Handle":"112247696",
+	"FilePathName":"C:\\lprlog\\12.jpg"}}
+OpType 			SaveSnapImageToJpeg
+Handle			设备句柄
+FilePathName	文件路径，存在的绝对路径，包括文件名
+返回
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "SaveSnapImageToJpeg",
+    "Ret": "0",
+    "Data": ""
+}
+
+11，开闸
+{"Mode": "Park","MsgId": "1","OpType": "SetIOOutputAuto","Data": {"Handle":"112247696",
+	"ChnId":"0",
+	"NDuration":"500"}}
+OpType 			SetIOOutputAuto
+Handle			设备句柄
+ChnId			IO输出的通道号，从0开始
+NDuration		延时时间，取值范围[500, 5000]毫秒
+返回
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "SetIOOutputAuto",
+    "Ret": "0",
+    "Data": ""
+}
+
+
+12，开启透明通道(在打开设备时已经调用，因此无需再调用)
+{"Mode": "Park","MsgId": "1","OpType": "SerialStart","Data": {"Handle":"112247696","SerialPort":""}}
+OpType 			SerialStart
+Handle			设备句柄
+SerialPort		指定使用设备的串口序号：0表示第一个串口，1表示第二个串口
+返回值
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "SerialStart",
+    "Ret": "236826608",
+    "Data": ""
+}
+
+13，透明通道发送数据
+[-86, 0, 5, 21, 0, 1, 1, 13, -44, -63, 90, 68, 49, 49, 48, -72, -37, 10, -61, -69, -45, -48, -56, -88, -49, -34, 35, -37]
+{"Mode": "Park","MsgId": "1","OpType": "SerialSend","Data": {"Serialhandle":"236826608","Data":"qgAFKAABAQ3W0Ln6ytDV/rmks8y7qrGxyei8xtHQvr/=","SizeData":"64"}}
+OpType 			SerialSend
+Serialhandle	透明通道句柄
+Data			将要传输的数据块
+SizeData		将要传输的数据块的字节数
+
+语音版 例子
+{"Mode":"Park","MsgId":"5f329d0e-2f89-4059-882e-f8a1273d068b","OpType":"SerialSend","Data":{"Serialhandle":10795000,"Data":"qkIBALEOAJUAAgAsAAMAKwAEACYAGps=","SizeData":32}}
+显示板例子
+{"Mode":"Park","MsgId":"0104e8cd-fd68-4484-8530-de176536402e","OpType":"SerialSend","Data":{"Serialhandle":10795000,"Data":"qkIBAK4iACMJAAHD9kExMjM0NSQTAAHPw8PF1tC\/2NbHu9taS1RlY2+hOg==","SizeData":60}}
+
+
+14，透明通道停止发送数据
+{"Mode": "Park","MsgId": "1","OpType": "SerialStop","Data": {"Serialhandle":"236826608"}}
+OpType 			SerialStop
+Serialhandle	透明通道句柄
+
+15，下发黑白名单
+{"Mode": "Park","MsgId": "1","OpType": "ImportPlateList","Data": {"Handle":"112247696","t":"","PlateList":"","Count":""}}
+如：
+{
+    "Mode": "Park",
+    "MsgId": "e7eb448a-cdb3-4638-bd5d-28c23fb0cc8e",
+    "OpType": "ImportPlateList",
+    "Data": {
+        "Handle": 112247696,
+        "t": 0,
+		
+        "PlateList": "w/ZCMTExMTEAAAAAAAAAAAfhCwEH4QwBw/ZDMTIzMTIAAAAAAAAAAAfhCwIH4QsEw/ZRMTIzMTIAAAAAAAAAAAfhCwIH4QsEw/ZSMTIzMTIAAAAAAAAAAAfhCwIH4QsFw/ZBMTExMTEAAAAAAAAAAAfhCwIH4QsM",
+        "Count": 5
+    }
+}
+
+OpType 			ImportPlateList
+Handle			设备句柄
+t				名单类型	0：白名单， 1：黑名单, 2：固定车名单
+PlateList		黑白名单信息	//PlateList需要转成base64数据
+Count			条数
+
+返回值
+{
+    "Mode": "Park",
+    "MsgId": "e7eb448a-cdb3-4638-bd5d-28c23fb0cc8e",
+    "OpType": "ImportPlateList",
+    "Ret": "0",
+    "Data": ""
+}
+
+16，取出黑白名单
+注：#define MAX_WHITELIST_COUNT 8192  //当前支持的最大车牌白名单数量
+	#define MAX_BLACKLIST_COUNT 8192  //当前支持的最大车牌黑名单数量
+	
+{"Mode": "Park","MsgId": "1","OpType": "ExportPlateList","Data": {"Handle":"112247696","t":"0","Count":"4"}}
+OpType 			ExportPlateList
+Handle			设备句柄
+t				名单类型	0：白名单， 1：黑名单, 2：固定车名单
+Count			条数
+
+返回值
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "ExportPlateList",
+    "Ret": "0",
+    "Data": 
+//Data需要进行base64解析											"eyAiUGxhdGVMaXN0Ijoi6Ze9QjExMTExIDIwMTctMTEtMDEgMjAxNy0xMi0wMTvpl71DMTIzMTIgMjAxNy0xMS0wMiAyMDE3LTExLTA0O+mXvVExMjMxMiAyMDE3LTExLTAyIDIwMTctMTEtMDQ76Ze9UjEyMzEyIDIwMTctMTEtMDIgMjAxNy0xMS0wNTsiLAoJIkNvdW50IjoiNCJ9"
+}
+Data需要进行base64解析，解析得
+{
+    "PlateList": "闽B11111 2017-11-01 2017-12-01;闽C12312 2017-11-02 2017-11-04;闽Q12312 2017-11-02 2017-11-04;闽R12312 2017-11-02 2017-11-05;",
+    "Count": "4"
+}
+
+
+//add at 2017-10-09
+17,设置脱机参数
+{"Mode": "Park","MsgId": "1","OpType": "SetOfflineParam","Data": {"Handle":"112247696","ServerIP":"","ServerPort":"","ParkID":"1","RecordIsCover":"1","ParkInOutFlag":"1","MonthcarAlarmDays":"29","RecognitionAccuracy":"0","RecordMatchAccuracy":"0","MonthCarToTempcarFlag":"0","MonthCarOpenType":"1","TempCarOpenType":"1","MinCharge":"10","TempCarForbiddenFlag":"1","SyncTimeFromMaster":"2300","OnlineFlag":"0","OneChannelMode":"1","OneChannelWaitTime":"10","NormalModeWaitTime":"10","MinChargeFlag":"1","DisplayRefreshInterval":"10","PropertyLogo":"中控智慧","Reserve":""}}
+其中"Data"需要转成base64数据
+{"Mode": "Park","MsgId": "1","OpType": "SetOfflineParam","Data":"eyJIYW5kbGUiOiIyNTYyOTg5NjAiLCJTZXJ2ZXJJUCI6IiIsIlNlcnZlclBvcnQiOiIiLCJQYXJrSUQiOiIxIiwiUmVjb3JkSXNDb3ZlciI6IjEiLCJQYXJrSW5PdXRGbGFnIjoiMSIsIk1vbnRoY2FyQWxhcm1EYXlzIjoiMjkiLCJSZWNvZ25pdGlvbkFjY3VyYWN5IjoiMCIsIlJlY29yZE1hdGNoQWNjdXJhY3kiOiIwIiwiTW9udGhDYXJUb1RlbXBjYXJGbGFnIjoiMCIsIk1vbnRoQ2FyT3BlblR5cGUiOiIxIiwiVGVtcENhck9wZW5UeXBlIjoiMSIsIk1pbkNoYXJnZSI6IjEwIiwiVGVtcENhckZvcmJpZGRlbkZsYWciOiIxIiwiU3luY1RpbWVGcm9tTWFzdGVyIjoiMjMwMCIsIk9ubGluZUZsYWciOiIwIiwiT25lQ2hhbm5lbE1vZGUiOiIxIiwiT25lQ2hhbm5lbFdhaXRUaW1lIjoiMTAiLCJOb3JtYWxNb2RlV2FpdFRpbWUiOiIxMCIsIk1pbkNoYXJnZUZsYWciOiIxIiwiRGlzcGxheVJlZnJlc2hJbnRlcnZhbCI6IjEwIiwiUHJvcGVydHlMb2dvIjoi5Lit5o6n5pm65oWnIiwiUmVzZXJ2ZSI6IiJ9"}
+
+ServerIP[16];					//主服务器IP地址
+ServerPort;					//主服务器端口
+ParkID;						//车场编号
+RecordIsCover;					//记录（出入场记录和收费记录）是否覆盖，1：覆盖，0：不覆盖
+ParkInOutFlag;					//车场出入口标识，0 车场入口；1 车场出口								
+MonthcarAlarmDays;				//固定车预警天数
+RecognitionAccuracy;			//固定车匹配精度，0-6,0表示精确匹配
+RecordMatchAccuracy;			//记录匹配精度，0-6,0表示精确匹配
+MonthCarToTempcarFlag;			//启用固定车转临时车，0-不启用；1-启用
+MonthCarOpenType;				//固定车开闸方式，0-人工开闸；1-自动开闸
+TempCarOpenType;				//临时车开闸方式，0-人工开闸；1-自动开闸
+MinCharge;						//最低收费
+TempCarForbiddenFlag;			//临时车禁止出入场，0：可出入场，1：不可出入场
+SyncTimeFromMaster;			//时间点23:00-->2300  -->0x08fc
+OnlineFlag;					//是否在线模式，0-脱机；1-在线
+OneChannelMode;				//是否启用单通道模式，0：不启用单通道，1：单通道模式
+OneChannelWaitTime;			//单通道重复车牌等待时间，以秒为单位
+NormalModeWaitTime;			//正常模式重复车牌等待时间，以秒为单位
+MinChargeFlag;					//是否启用最低收费，0：不启用，1：启用
+		//unsigned char	nAuxiliaryCameraFlag;			//是否辅助摄像机，0：主机，1：辅助摄像机
+		//char			sMasterCamIP[16];				//主摄像机IP地址
+DisplayRefreshInterval;		//脱机显示屏显示内容的刷新间隔，以秒为单位
+PropertyLogo[64];				//脱机显示屏默认显示的企业标识
+Reserve[32];					//保留字段
+
+返回值
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "SetOfflineParam",
+    "Ret": "0",
+    "Data": ""
+}
+
+18.获取脱机参数
+{"Mode": "Park","MsgId": "1","OpType": "GetOfflineParam","Data": {"Handle":"112247696"}}
+
+返回值
+{ "Mode":"Park", "MsgId":"1", "OpType":"GetOfflineParam", "Ret":"0", "Data":"eyJTZXJ2ZXJJUCI6IiIsIlNlcnZlclBvcnQiOiIwIiwiUGFya0lEIjoiMSIsIlJlY29yZElzQ292ZXIiOiIxIiwiUGFya0luT3V0RmxhZyI6IjEiLCJNb250aGNhckFsYXJtRGF5cyI6IjI5IiwiUmVjb2duaXRpb25BY2N1cmFjeSI6Ijk5IiwiUmVjb3JkTWF0Y2hBY2N1cmFjeSI6Ijk5IiwiTW9udGhDYXJUb1RlbXBjYXJGbGFnIjoiMCIsIk1vbnRoQ2FyT3BlblR5cGUiOiIxIiwiVGVtcENhck9wZW5UeXBlIjoiMSIsIk1pbkNoYXJnZSI6IjEwLjAiLCJUZW1wQ2FyRm9yYmlkZGVuRmxhZyI6IjEiLCJTeW5jVGltZUZyb21NYXN0ZXIiOiIyMzAwIiwiT25saW5lRmxhZyI6IjAiLCJPbmVDaGFubmVsTW9kZSI6IjEiLCJPbmVDaGFubmVsV2FpdFRpbWUiOiIxMCIsIk5vcm1hbE1vZGVXYWl0VGltZSI6IjEwIiwiTWluQ2hhcmdlRmxhZyI6IjEiLCJEaXNwbGF5UmVmcmVzaEludGVydmFsIjoiMTAiLCJQcm9wZXJ0eUxvZ28iOiLkuK3mjqfmmbrmhaciLCJSZXNlcnZlIjoiIn0="}
+其中"Data"需要进行base64解码
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "GetOfflineParam",
+    "Ret": "0",
+    "Data": {
+        "ServerIP": "",
+        "ServerPort": "0",
+        "ParkID": "1",
+        "RecordIsCover": "1",
+        "ParkInOutFlag": "1",
+        "MonthcarAlarmDays": "29",
+        "RecognitionAccuracy": "99",
+        "RecordMatchAccuracy": "99",
+        "MonthCarToTempcarFlag": "0",
+        "MonthCarOpenType": "1",
+        "TempCarOpenType": "1",
+        "MinCharge": "10.0",
+        "TempCarForbiddenFlag": "1",
+        "SyncTimeFromMaster": "2300",
+        "OnlineFlag": "0",
+        "OneChannelMode": "1",
+        "OneChannelWaitTime": "10",
+        "NormalModeWaitTime": "10",
+        "MinChargeFlag": "1",
+        "DisplayRefreshInterval": "10",
+        "PropertyLogo": "中控智慧",
+        "Reserve": ""
+    }
+}
+
+19，设置脱机收费表数据
+{"Mode": "Park","MsgId": "1","OpType": "SetDeviceData","Data": {"Handle":"112247696",
+	"Type":"3",
+	"Count":"1",
+	"DataBuf":"**"}}
+
+Type 表类型
+	3,		//临时车收费规则（TempCarChargeRule）:只能保存一条，若要设置新的ID，只能先清除再重新设置新的ID。对相同ID的数据会进行覆盖操作
+		typedef struct _TempCarChargeRule_
+		{
+			unsigned int ID;									//ID: 可以映射到不同车类型
+			unsigned int FreeMinutes;							//免费分钟
+			unsigned char IncludeFreeMinFlag;					//包含免费分钟计费，0：不包含，1：包含
+			unsigned char CrosstimeSpitFlag;					//跨段拆分计费，0：不拆分，1：拆分
+			float MaxFeePerDay;							//全天（单次）最高收费
+			unsigned int GenChargeRuleIDs[16];				//1>按时段：最多分16个时段 2>按周期：最多分16个周期
+		}TTempCarChargeRule, *PTempCarChargeRule;
+		如：{"Mode": "Park","MsgId": "1","OpType": "SetDeviceData","Data": {"Handle":"112247696",
+			"Type":"3",
+			"Count":"1",
+			"DataBuf":"1,0,0,0,300.0,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;"}}
+	4,			//通用收费规则（GenChargeRule）
+		typedef struct _GenChargeRule_
+		{
+			unsigned int ID;							//规则ID
+			unsigned int eMode;						//收费模式，1：按时段，2：按周期
+			union _RULE_
+			{
+				TimezoneRule uTimezoneRule;
+				PeriodRule uPeriodRule;
+				VirtualRule uVirtualRule;
+			}rule;
+		}TGenChargeRule, *PGenChargeRule;
+			typedef struct _TimezoneRule_
+			{
+				unsigned int StartTime;							//开始时间08:00-->830  --->0x33E
+				unsigned int EndTime;							//结束时间20:00-->2000 --->0x7D0
+				unsigned char PayPerViewFlag;					//按次收费，1：按次，0：不按次
+				unsigned int UnitTimeMin;						//单位时间(分钟)
+				float UnitTimeCharge;					//单位时间内的金额
+				float MaxCharge;						//1>按次模式：一次收费金额; 2>不按次:收费最高限额
+			}TimezoneRule, *PTimezoneRule;
+			typedef struct _PeriodRule_
+			{
+				unsigned int Min;							//时长(分钟)
+				unsigned char PayPerViewFlag;				//按次收费，1：按次，0：不按次
+				unsigned int UnitTimeMin;					//单位时间(分钟)
+				float UnitTimeCharge;				//单位时间内的金额
+				float MaxCharge;					//1>按次模式：一次收费金额; 2>不按次:收费最高限额
+			}PeriodRule, *PPeriodRule;
+		如：{"Mode": "Park","MsgId": "1","OpType": "SetDeviceData","Data": {"Handle":"112247696",
+			"Type":"4",
+			"Count":"1",
+			"DataBuf":"22,1,0000,0000,0,60,100.0,200.0;"}}
+	5,			//记录表（RecordLog），注：不能设置，只能获取
+		typedef struct _RecordInOutLog_
+		{
+			unsigned int	ID;									//编号
+			unsigned int	TimeSecond;							//时间，((t->tm_year-100)*12*31+((t->tm_mon)*31)+t->tm_mday-1)*(24*60*60)+ (t->tm_hour * 60 + t->tm_min) * 60 + t->tm_sec;
+			char	CarNumber[16];		//车牌号码
+			unsigned long long	CardNo;								//卡号
+			unsigned char	InOutState;							//通道状态，0：入，1：出
+
+			char	EventAddr[16];		//通道名称，默认是IP地址
+			unsigned int	EventType;							//事件类型，见附录
+
+			char	PhotoPath[64];			//图片路径，默认字符串时间,可扩展时间+车牌等
+			unsigned char	IsUploadFlag;						//是否已上传给PC，0：未上传，1：已上传
+			unsigned char	IsLeave;							//是否出厂，0：未出场，1：已出场（针对入场记录）
+		}TRecordInOutLog, *PRecordInOutLog;
+	7,					//收费表（ChargeLog）,注：不能设置，只能获取
+		typedef struct _ChargeLog_
+		{
+			unsigned int ID;
+			unsigned int InID;				//入场记录编号
+			unsigned int OutID;				//出场记录编号
+
+			float ReceivableAmount;			//应收金额
+			float DiscountAmount;			//优惠金额
+			float ActualAmount;				//实收金额
+
+			unsigned int CarTypeID;			//车类型编号，由设置脱机收费表数据的ID字段指定
+			unsigned int ChargeTime;		//收费时间，((t->tm_year-100)*12*31+((t->tm_mon)*31)+t->tm_mday-1)*(24*60*60)+ (t->tm_hour * 60 + t->tm_min) * 60 + t->tm_sec;
+		}TChargeLog, *PChargeLog;	
+Count 行数
+DataBuf 数据
+
+返回值
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "SetDeviceData",
+    "Ret": "0",
+    "Data": ""
+}
+
+20，获取脱机收费表数据
+{"Mode": "Park","MsgId": "1","OpType": "GetDeviceData","Data": {"Handle":"112247696",
+	"Type":"0",
+	"Offset":"0",
+	"Count":"1"}}
+	
+Type 表类型
+	3,		//临时车收费规则（TempCarChargeRule）
+	4,			//通用收费规则（GenChargeRule）
+	5,			//记录表（RecordLog）
+	7,					//收费表（ChargeLog）
+Offset 开始索引(从某个ID开始取)
+Count 行数
+
+返回值
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "GetDeviceData",
+    "Ret": "0",
+    "Data": "eyJDb3VudCI6IjQiLCJEYXRhQnVmIjoiMTc5NzE0LDU3MzE2MjczNiznsqRGUUs4ODMsMCwwLDE5Mi4xNjguMjE1LjEyMywxMDQsMjAxNzEwMzExOTUyMTYwMTQsMCwwOzE3OTcxNSw1NzMxNjI3NDYs6buRUUs4ODMxLDAsMCwxOTIuMTY4LjIxNS4xMjMsMTA0LDIwMTcxMDMxMTk1MjI2NjI0LDAsMDsxNzk3MTYsNTczMTYyNzQ3LOeypEZRSzg4MywwLDAsMTkyLjE2OC4yMTUuMTIzLDEwNCwyMDE3MTAzMTE5NTIyNzI0NCwwLDA7MTc5NzE3LDU3MzE2Mjc1Mizpu5FRSzg4M0osMCwwLDE5Mi4xNjguMjE1LjEyMywxMDQsMjAxNzEwMzExOTUyMzI3ODQsMCwwOyJ9"
+}
+其中"Data"需要进行base64解码
+
+21，清空表数据
+{"Mode": "Park","MsgId": "1","OpType": "ClearDeviceData","Data": {"Handle":"112247696",
+	"Type":"0"}}
+Type 表类型
+	3,		//临时车收费规则（TempCarChargeRule）
+	4,			//通用收费规则（GenChargeRule）
+	5,			//记录表（RecordLog）
+	7,					//收费表（ChargeLog）
+	
+返回值
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "ClearDeviceData",
+    "Ret": "0",
+    "Data": ""
+}
+	
+22,从设备获取数据数量
+{"Mode": "Park","MsgId": "1","OpType": "GetDeviceDataCount","Data": {"Handle":"112247696",
+	"Type":"0",
+	"Offset":"0"}}
+Type 表类型
+	3,		//临时车收费规则（TempCarChargeRule）
+	4,			//通用收费规则（GenChargeRule）
+	5,			//记录表（RecordLog）
+	7,					//收费表（ChargeLog）
+Offset 开始索引(从某个ID开始取)
+
+返回值
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "GetDeviceDataCount",
+    "Ret": "0",
+    "Data": {
+        "Count": "4"//记录数
+    }
+}
+
+23,恢复设备参数
+{"Mode": "Park","MsgId": "1","OpType": "ResetFactory","Data": {"Handle":"112247696",
+	"ResetType":"0"}}
+ResetType 0：恢复技术参数，1：恢复网络参数，2：恢复所有参数
+
+24,重启设备
+{"Mode": "Park","MsgId": "1","OpType": "RebootDevice","Data": {"Handle":"112247696"}}
+{
+    "Mode": "Park",
+    "MsgId": "1",
+    "OpType": "RebootDevice",
+    "Ret": "0",
+    "Data": ""
+}
+
+25,追加车牌信息（如果有重复车牌吗，会直接替换）
+{"Mode": "Park","MsgId": "1","OpType": "AddPlateList","Data": {"Handle":"112247696","t":"","PlateList":"","Count":""}}
+如：
+{
+    "Mode": "Park",
+    "MsgId": "e7eb448a-cdb3-4638-bd5d-28c23fb0cc8e",
+    "OpType": "AddPlateList",
+    "Data": {
+        "Handle": 112247696,
+        "t": 0,		
+        "PlateList": "w/ZCMTExMTEAAAAAAAAAAAfhCwEH4QwBw/ZDMTIzMTIAAAAAAAAAAAfhCwIH4QsEw/ZRMTIzMTIAAAAAAAAAAAfhCwIH4QsEw/ZSMTIzMTIAAAAAAAAAAAfhCwIH4QsFw/ZBMTExMTEAAAAAAAAAAAfhCwIH4QsM",
+        "Count": 5
+    }
+}
+
+OpType 			AddPlateList
+Handle			设备句柄
+t				名单类型	0：白名单， 1：黑名单, 2：固定车名单
+PlateList		黑白名单信息	//PlateList需要转成base64数据
+Count			条数
+
+返回值
+{
+    "Mode": "Park",
+    "MsgId": "e7eb448a-cdb3-4638-bd5d-28c23fb0cc8e",
+    "OpType": "AddPlateList",
+    "Ret": "0",
+    "Data": ""
+}
+
+26,删除车牌信息
+{"Mode": "Park","MsgId": "1","OpType": "DelPlateList","Data": {"Handle":"112247696","t":"","PlateList":"","Count":""}}
+如：
+{
+    "Mode": "Park",
+    "MsgId": "e7eb448a-cdb3-4638-bd5d-28c23fb0cc8e",
+    "OpType": "DelPlateList",
+    "Data": {
+        "Handle": 112247696,
+        "t": 0,		
+        "PlateList": "w/ZCMTExMTEAAAAAAAAAAAfhCwEH4QwBw/ZDMTIzMTIAAAAAAAAAAAfhCwIH4QsEw/ZRMTIzMTIAAAAAAAAAAAfhCwIH4QsEw/ZSMTIzMTIAAAAAAAAAAAfhCwIH4QsFw/ZBMTExMTEAAAAAAAAAAAfhCwIH4QsM",
+        "Count": 5
+    }
+}
+
+OpType 			DelPlateList
+Handle			设备句柄
+t				名单类型	0：白名单， 1：黑名单, 2：固定车名单
+PlateList		黑白名单信息	//PlateList需要转成base64数据
+Count			条数
+
+返回值
+{
+    "Mode": "Park",
+    "MsgId": "e7eb448a-cdb3-4638-bd5d-28c23fb0cc8e",
+    "OpType": "DelPlateList",
+    "Ret": "0",
+    "Data": ""
+}
+
+27,获取设备支持的功能
+{"Mode": "Park","MsgId": "1","OpType": "GetDeviceFunList","Data": {"Handle":"112247696","len":"256"}}
+
+OpType		GetDeviceFunList
+Handle		设备句柄
+len			扩展用，固定传256
+
+
+二：回调函数推送的数据
+
+脱机事件回调相关
+1，记录表回调
+{
+    "Mode": "Park",
+    "MsgId": "1511488514-2017112495514816-37",
+    "OpType": "OnRecordCallback",
+    "Ret": "0",
+    "Data": "MTcsMjAxNy0xMS0yNCAwOTo1NDozMyzmsqpQOTkxMTIsMCwxLDE5Mi4xNjguMjE0LjIzLDEwMywyMDE3MTEyNDA5NTQzMjgyMSwxLDA="
+}
+Data解析得
+ID,TimeSecond,CarNumber,CardNo,InOutState,EventAddr,EventType,PhotoPath,IsUploadFlag,IsLeave		
+17,2017-11-24 09:54:33,沪P99112,0,1,192.168.214.23,103,20171124095432821,1,0
+
+2，收费表回调
+{
+    "Mode": "Park",
+    "MsgId": "1511488514-2017112495514816-38",
+    "OpType": "OnRecordCallback",
+    "Ret": "0",
+    "Data": "NCwxNiwxNywzMC4wMCwwLjAwLDMwLjAwLDAsMjAxNy0xMS0yNCAwOTo1NDozMywxOTIuMTY4LjIxNC4yMw=="
+}
+Data解析得
+ID,InID,OutID,ReceivableAmount,DiscountAmount,ActualAmount,CarTypeID,ChargeTime
+4,16,17,30.00,0.00,30.00,0,2017-11-24 09:54:33,192.168.214.23
+
+
+设备搜索发送的数据
+{
+    "Mode": "Park",
+    "MsgId": "1500029338",		//随机数
+    "OpType": "OnDeviceFound",
+    "Ret": "0",
+    "Data": {
+        "DeviceName": "IPC1000",
+        "IP": "192.168.215.191",
+        "MacAddr": "",
+        "PortWeb": "80",
+        "PortListen": "5000",
+        "SubMask": "255.255.255.0",
+        "Gateway": "192.168.215.1",
+        "MultiAddr": "239.0.0.0",
+        "DnsAddr": "202.96.134.133",
+        "MultiPort": "5000",
+        "ChannelNum": "1",
+        "FindCount": "1",
+        "DeviceID": "2175168",
+        "DeviceType": "zk-LPR1000"
+    }
+}
+{	
+    "DeviceName": "IPC1000",		//DVS的名称
+    "IP": "192.168.215.191",		//DVS的IP地址
+    "MacAddr": "",						要设置的DVS的物理地址
+    "PortWeb": "80",					DVS的Web端口号
+    "PortListen": "5000",				DVS的通讯端口
+    "SubMask": "255.255.255.0",			DVS的子网掩码
+    "Gateway": "192.168.215.1",			DVS的ID网关
+    "MultiAddr": "239.0.0.0",			DVS的多播地址
+    "DnsAddr": "202.96.134.133",		DVS的DNS地址
+    "MultiPort": "5000",				DVS的多播端口号
+    "ChannelNum": "1",					DVS的通道数
+    "FindCount": "1",					发现DVS的个数，假如一个没有该值为0，那么前面的参数也无效。(臻识无此字段。所以，不用)
+    "DeviceID": "2175168",				
+    "DeviceType": "zk-LPR2100"
+}
+
+设备状态发送的数据
+非脱机收费版
+{
+    "Mode": "Park",
+    "MsgId": "1500029338",		//随机数
+    "OpType": "OnCommonNotify",
+    "Ret": "0",
+    "Data": {
+        "Handle": "112247696",		//设备句柄
+        "ENotify": "4",				//状态
+        "Detail": ""				//状态描述
+    }
+}
+脱机收费版
+{
+    "Mode": "Park",
+    "MsgId": "1509950945-201711614495694-10",//随机数
+    "OpType": "OnCommonNotify",
+    "Ret": "0",
+    "Data": {
+        "Handle": "112247696",		//设备句柄
+        "ENotify": "3",				//状态
+        "Detail": "",				//状态描述
+        "GateSwitchStatus": "0",	//道闸开关状态
+        "GateRunStatus": "0",		//道闸运行状态
+        "FeelStatus": "0"			//地感状态	
+    }
+}
+道闸开关状态
+GATE_CLOSED = 0,		//道闸关到位
+GATE_CLOSING = 1,		//道闸关闸中
+GATE_OPENING = 2,		//道闸开闸中
+GATE_OPENED = 3,		//道闸开到位
+GATE_STOP = 4,			//中途停闸
+道闸运行状态
+GATE_NORMAL = 0,		//道闸正常运行
+GATE_OPEN_TIMEOUT = 1,	//道闸开超时
+GATE_OFF_TIMEOUT = 2,	//道闸关超时
+地感状态
+FEEL_NONE = 0,		//无地感
+FEEL_HAVE = 1,		//有地感
+
+由于推送数据中包含中文，会导致websocket奔溃，需要先进行base64解码成json数据，再进行数据获取
+车牌识别发送的数据
+{
+    "Mode": "Park",
+    "MsgId": "1500029338",			//随机数
+    "OpType": "OnPlateInfo",
+    "Ret": "0",
+    "Data": "eyJIYW5kbGUiOiIxNzA1MDc2OCIsIlRyaWdnZXJUaW1lIjoiMjAxNjA3MTMxMDM2MzA1MDAiLCJQcm9jZXNzVGltZSI6IjExNiIsCQkJCQkgICJQbGF0ZU51bSI6IjEiLCJMaWNlbnNlIjoivL1SRDEzNjciLCJMZXR0ZXJDb3VudCI6IjciLCJMZWZ0IjoiLTE2MjcyNTg4ODAiLAkJCQkJICAiUmlnaHQiOiItMjY4MzY5OTIwIiwiVG9wIjoiMTM0NDE0MzM2IiwiQm90dG9tIjoiMzY5MjI5ODI0IiwiUGxhdGVDb2xvciI6IjMwIiwJCQkJCSAgIkRvdWJsZVBsYXRlcyI6IjAiLCJSZXNlcnZlIjoiIiwiTlJlc2VydmUiOiIiLCJFUmVzdWx0VHlwZSI6IjQiLAkJCQkJICAiUGljRmlsZU5hbWUiOiJFOlxcSmF2YVxcTFBSQ2xpZW50RGVtb1xcMjAxNy03LTE0XFwyMDE2MDcxMzEwMzYzMDUwMLy9UkQxMzY3LmpwZyJ9"
+}
+Data数据解析得
+{
+    "Handle": "10843728",						//设备句柄
+    "TriggerTime": "20160713142552952",			//触发时间,
+    "ProcessTime": "169",						//当前图片的处理时间	
+    "PlateNum": "1",							//当前识别的车牌数量
+    "License": "鲁E1100Z",						//车牌号
+    "LetterCount": "7",							//字符数量
+    "Left": "621",								//车牌位置信息
+    "Right": "710",								//车牌位置信息
+    "Top": "410",								//车牌位置信息
+    "Bottom": "446",							//车牌位置信息
+    "PlateColor": "30",							//车牌颜色
+    "DoublePlates": "0",						//是否双层车牌
+    "Reserve": "",								//为了对齐
+	"NReserve": "",								//预留字段
+    "EResultType": "4",							//车牌识别结果类型
+    "PicFileName": "E:\\Java\\LPRClientDemo\\2017-7-7\\20160713142552952鲁E1100Z.jpg"		//图片路径
+}
+
+
+附录
+
+//事件类型，
+typedef enum _PARK_EVENT_
+	{
+		E_DEV_EVENT_START = 100,				//Start
+		E_WHITE_LIST_CAR = 101,					//white list car
+		E_BLACK_LIST_CAR_REFUSED = 102,			//black list car refused
+		E_TEMP_CAR = 103,						//temporary car
+		E_TEMP_CAR_REFUSED = 104,				//temporary car refused
+		E_WHITE_TO_TEMP_CAR = 105,				//white to temporary car
+		E_WHITE_EXPIRED = 106,					//white expired
+		E_TEMP_CAR_NO_MATCH_IN = 107,					//temporary car can't match in
+		E_TEMP_CAR_MIN_CHARGE = 108,			//temporary car min charge
+	}ParkEvent;
+	
+//国家编码定义add by fangzx 20170903
+	typedef enum _APP_COUNTRY_CODE_E
+	{
+		//CA = 1,//加拿大
+		US = 1,//美国
+		KZ = 7,//哈萨克斯坦
+		//RU = 7,//俄罗斯
+		EG = 20,//埃及
+		ZA = 27,//南非
+		GR = 30,//希腊
+		NL = 31,//荷兰
+		BE = 32,//比利时
+		FR = 33,//法国
+		ES = 34,//西班牙
+		IT = 39,//意大利
+		UK = 44,//英国
+		RO = 40,//罗马尼亚
+		CH = 41,//瑞士
+		AT = 43,//奥地利
+		DK = 45,//丹麦
+		SE = 46,//瑞典
+		NO = 47,//挪威
+		PL = 48,//波兰
+		PE = 51,//秘鲁
+		MX = 52,//墨西哥
+		CU = 53,//古巴
+		AR = 54,//阿根廷
+		BR = 55,//巴西
+		CL = 56,//智利
+		CO = 57,//哥伦比亚
+		VE = 58,//委内瑞拉
+		MY = 60,//马来西亚
+		AU = 61,//澳大利亚
+		ID = 62,//印度尼西亚
+		PH = 63,//菲律宾
+		NZ = 64,//新西兰
+		SG = 65,//新加坡
+		TH = 66,//泰国
+		JP = 81,//日本
+		KR = 82,//韩国
+		VN = 84,//越南
+		CN = 86,//中国
+		TR = 90,//土耳其
+		IND = 91,//印度
+		PK = 92,//巴基斯坦
+		AF = 93,//阿富汗
+		LK = 94,//斯里兰卡
+		MM = 95,//缅甸
+		IR = 98,//伊朗
+		MA = 210,//摩洛哥
+		//EH = 210,//西撒哈拉
+		DZ = 213,//阿尔及利亚
+		TN = 216,//突尼斯
+		LY = 218,//利比亚
+		GM = 220,//冈比亚
+		SN = 221,//塞内加尔
+		MR = 222,//毛里塔尼亚
+		ML = 223,//马里
+		GN = 224,//几内亚
+		CI = 225,//科特迪瓦
+		BF = 226,//布基纳法索
+		NE = 227,//尼日尔
+		TG = 228,//多哥
+		BJ = 229,//贝宁
+		MU = 230,//毛里求斯
+		LR = 231,//利比里亚
+		SL = 232,//塞拉利昂
+		GH = 233,//加纳
+		NG = 234,//尼日利亚
+		TD = 235,//乍得
+		CF = 236,//中非共和国
+		CM = 237,//喀麦隆
+		CV = 238,//佛得角
+		ST = 239,//圣多美和普林西比
+		GQ = 240,//赤道几内亚
+		GA = 241,//加蓬
+		CD = 242,//刚果
+		//CG = 242,//刚果民主共和国
+		AO = 244,//安哥拉
+		GW = 245,//几内亚比绍
+		SD = 249,//苏丹
+		RW = 250,//卢旺达
+		ET = 251,//埃塞俄比亚
+		SO = 252,//索马里
+		DJ = 253,//吉尔吉斯斯坦
+		KE = 254,//肯尼亚
+		TZ = 255,//坦桑尼亚
+		UG = 256,//乌干达
+		BI = 257,//布隆迪
+		MZ = 258,//莫桑比克
+		ZM = 260,//赞比亚
+		MG = 261,//马达加斯加
+		RE = 262,//留尼旺
+		ZW = 263,//津巴布韦
+		NA = 264,//纳米比亚
+		MW = 265,//马拉维
+		LS = 266,//莱索托
+		BW = 267,//博茨瓦纳
+		SZ = 268,//斯威士兰
+		KM = 269,//科摩罗
+		//YT = 269,//马约特
+		ER = 291,//厄立特里亚
+		AW = 297,//阿鲁巴
+		HU = 336,//匈牙利
+		DE = 349,//德国
+		PT = 351,//葡萄牙
+		LU = 352,//卢森堡
+		IE = 353,//爱尔兰
+		IS = 354,//冰岛
+		AL = 355,//阿尔巴尼亚
+		MT = 356,//马耳他
+		CYP = 357,//塞浦路斯
+		FI = 358,//芬兰
+		BG = 359,//保加利亚
+		LT = 370,//立陶宛
+		LV = 371,//拉脱维亚
+		EE = 372,//爱沙尼亚
+		MD = 373,//摩尔多瓦
+		AM = 374,//亚美尼亚
+		BY = 375,//白俄罗斯
+		AD = 376,//安道尔
+		UA = 380,//乌克兰
+		RS = 381,//塞尔维亚
+		ME = 382,//黑山共和国
+		HR = 385,//克罗地亚
+		SI = 386,//斯洛文尼亚
+		BA = 387,//波斯尼亚和黑塞哥维那
+		MK = 389,//马其顿
+		VA = 396,//梵蒂冈
+		CZ = 420,//捷克共和国
+		SK = 421,//斯洛伐克
+		BZ = 501,//伯利兹
+		GT = 502,//危地马拉
+		SV = 503,//萨尔瓦多
+		HN = 504,//洪都拉斯
+		NI = 505,//尼加拉瓜
+		CR = 506,//哥斯达黎加
+		PA = 507,//巴拿马
+		HT = 509,//海地
+		GP = 590,//瓜德罗普岛
+		BO = 591,//玻利维亚
+		GY = 592,//圭亚那
+		EC = 593,//厄瓜多尔
+		GF = 594,//法属圭亚那
+		PY = 595,//巴拉圭
+		MQ = 596,//马提尼克
+		SR = 597,//苏里南
+		UY = 598,//乌拉圭
+		AN = 599,//荷属安的列斯
+		GU = 671,//关岛
+		TL = 670,//东帝汶
+		BN = 673,//文莱达鲁萨兰国
+		NR = 674,//瑙鲁
+		PG = 675,//巴布亚新几内亚
+		TO = 676,//汤加
+		SB = 677,//所罗门群岛
+		VU = 678,//瓦努阿图
+		FJ = 679,//斐济
+		CK = 682,//库克群岛
+		WS = 685,//萨摩亚
+		KI = 686,//基里巴斯
+		NC = 687,//新喀里多尼亚
+		TV = 688,//图瓦卢
+		PF = 689,//法属波利尼西亚
+		FM = 691,//密克罗尼西亚
+		MH = 692,//马绍尔群岛
+		KP = 850,//朝鲜
+		HK = 852,//香港
+		MO = 853,//澳门
+		KH = 855,//柬埔寨
+		LA = 856,//老挝
+		BD = 880,//孟加拉国
+		TW = 886,//台湾
+		MV = 961,//马尔代夫
+		LB = 962,//黎巴嫩
+		JO = 963,//约旦
+		SY = 964,//叙利亚
+		IQ = 965,//伊拉克
+		KW = 966,//科威特
+		SA = 967,//沙特阿拉伯
+		YE = 968,//也门
+		OM = 969,//阿曼
+		PS = 970,//巴勒斯坦
+		AE = 972,//阿拉伯联合酋长国
+		IL = 973,//以色列
+		BH = 974,//巴林
+		QA = 975,//卡塔尔
+		BT = 976,//不丹
+		MN = 977,//蒙古
+		NP = 978,//尼泊尔
+		TJ = 992,//塔吉克斯坦
+		TM = 993,//土库曼斯坦
+		AZ = 994,//阿塞拜疆
+		GE = 995,//格鲁吉亚
+		KG = 996,//吉布提
+		UZ = 998,//乌兹别克斯坦
+		BB = 1809,//巴巴多斯
+		//BS = 1809,//巴哈马
+		//PR = 1809,//波多黎各
+		//DO = 1809,//多明尼加共和国
+		//GD = 1809,//格林纳达
+		//LC = 1809,//圣卢西亚
+		//VC = 1809,//圣文森特
+		//TT = 1809,//特立尼达和多巴哥
+		//JM = 1809,//牙买加
+		//VG = 1809,//英属维尔京群岛
+	}COUNTRY_CODE_E;
+
+#define ZK_OK					0		//成功
+#define ZK_FAIL					-1		//失败
+#define ZK_ERROR_INVALID_URL	-1003	//URL 不支持
+#define ZK_ERROR_REGFAIL		-1004	//注册失败
+#define ZK_ERROR_NO_POST		-1005	//不是psot请求
+#define ZK_ERROR_INVALID_PARAM	-1006	//无效参数
+#define ZK_ERROR_INVALID_DATA	-1007	//无效数据
+#define ZK_GETMAC_FAIL			-1008	//获取mac地址失败
+#define ZK_RESPOND_FAIL			-1009	//post请求未响应
+#define ZK_GETJSON_FAIL			-1010	//获取json数据失败
+#define ZK_NOT_AUTH				-1011	//未认证
+#define ZK_ERROR_NO_GET			-1012	//不是get请求
+#define ZK_ERROR_NOT_SUPPORT	-1013	//不支持
+#define ZK_ERROR_NULL_POINTER   -1014  //空指针
+#define ZK_ERROR_SETPARAM_FAIL  -1015	//设置自定义参数失败
+#define ZK_ERROR_INVALID_HANDLE -1016	//无效句柄
+#define ZK_ERROR_OPEN_FILE		-1017	//打开文件失败
+#define ZK_ERROR_INIT_MODULE	-1018	//创建实例失败
+#define ZK_ERROR_NO_DEVICE		-1019	//无设备
+#define ZK_ERROR_NO_DATA		-1020	//无数据
+#define ZK_ERROR_UNSPPORT     -1021	//不支持
+#define ZK_ERROR_INPUT			-1022//传入数据有问题(比如获取表数据时，传入获取的行数大于设备已有的行数)
+
+OS_NoErr = (OS_Error)0,		//操作成功
+	OS_BadURLFormat = (OS_Error)-1000,
+	OS_NotEnoughSpace,
+	OS_CannotOpenSocket,		//创建socket失败
+	OS_CannotConnect,			//设备断开连接
+	OS_InvalidArgument,			//无效数据
+	OS_CannotSendData,			//发送数据失败
+	OS_TRYAGAIN,				//服务器太忙，请再试试
+	OS_OperationErr,			//函数调用错误
+	OS_CannotOpenChn,			//打开通道失败
+	OS_VideoNotOpen,			//视频通道没有打开
+	OS_ConnectExist,			//连接已存在
+	OS_PullCannotConn,			//pull不能连接
+	OS_NotEnoughMem,			//内存不足
+	OS_FileReadErr,				//文件读取出错
+	OS_FileWriteErr,			//文件写入出错
+	OS_CannotRecvData,			//读取数据超时
+	OS_SetTimeFail,				//设置时间失败
+	OS_DevCannotSupport,		//设备不支持此命令
+	
